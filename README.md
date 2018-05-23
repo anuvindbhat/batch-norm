@@ -5,6 +5,6 @@ An implementation of the technique of [batch normalization](https://arxiv.org/ab
 Modify main.py with suitable values for 'total_epochs', the number of layers, and the number of neurons in each layer. On first-run of main.py the program will perform a one-time download of the MNIST dataset into /tmp/ clear the cache from this location if the download fails for any reason. A graph of the loss value and the test accuracy are created as ./loss.png and ./test.png respectively.
 
 ### Prerequisites
-Python3
-Numpy
+Python3\
+Numpy\
 Matplotlib - for graphing of the final data
