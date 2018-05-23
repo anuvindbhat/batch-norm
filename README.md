@@ -6,5 +6,5 @@ Modify main.py with suitable values for 'total_epochs', the number of layers, an
 
 ### Prerequisites
 Python3\
-Numpy\
+NumPy\
 Matplotlib - for graphing of the final data
