@@ -87,42 +87,42 @@ class ReLU():
 		return result
 
 class Layer():
-	def __init__(self, inpSize, numNodes, actFunc, eta, batch_size):
-		self.inpSize = inpSize
-		self.size = numNodes
-		self.weightMatrix = np.random.randn(inpSize, numNodes)
-		self.actFunc = actFunc
-		self.bias = np.random.randn(1, numNodes)
+	def __init__(self, inp_size, num_nodes, act_func, eta, batch_size):
+		self.inp_size = inp_size
+		self.size = num_nodes
+		self.weight_matrix = np.random.randn(inp_size, num_nodes)
+		self.act_func = act_func
+		self.bias = np.random.randn(1, num_nodes)
 		self.eta = eta
 		self.batch_size = batch_size
-		self.gamma = np.random.randn(1, numNodes)
-		self.beta = np.random.randn(1, numNodes)
+		self.gamma = np.random.randn(1, num_nodes)
+		self.beta = np.random.randn(1, num_nodes)
 		#caching the node input for the backward pass
-		self.inp = np.zeros((batch_size, inpSize))
-		self.out = np.zeros((batch_size, numNodes))
+		self.inp = np.zeros((batch_size, inp_size))
+		self.out = np.zeros((batch_size, num_nodes))
 		self.backprop_stuff = None
-		self.mean_training = np.zeros((1, numNodes))
-		self.var_training = np.zeros((1, numNodes))
+		self.mean_training = np.zeros((1, num_nodes))
+		self.var_training = np.zeros((1, num_nodes))
 
 	def forwardPass(self, inp):
 		self.inp = inp
-		net = np.dot(inp, self.weightMatrix) + self.bias
+		net = np.dot(inp, self.weight_matrix) + self.bias
 		y, mu, var, self.backprop_stuff = forward_batch(self.gamma, self.beta, net)
 		self.mean_training = 0.9 * self.mean_training + 0.1 * mu
 		self.var_training = 0.9 * self.var_training + 0.1 * var
-		self.out = self.actFunc.transform(y)
+		self.out = self.act_func.transform(y)
 		return self.out
 
 	def forwardPassTest(self, inp):
-		net = np.dot(inp, self.weightMatrix) + self.bias
+		net = np.dot(inp, self.weight_matrix) + self.bias
 		y = forward_batch_test(self.gamma, self.beta, net, self.mean_training, self.var_training)
-		return self.actFunc.transform(y)
+		return self.act_func.transform(y)
 
 	def backwardPass(self, error):
-		backprop_error = error * self.actFunc.grad(self.out)
+		backprop_error = error * self.act_func.grad(self.out)
 		backprop_error, dgamma, dbeta = backward_batch(backprop_error, self.backprop_stuff)
-		next_error = np.dot(backprop_error, self.weightMatrix.T)
-		self.weightMatrix += self.eta * np.dot(self.inp.T, backprop_error)
+		next_error = np.dot(backprop_error, self.weight_matrix.T)
+		self.weight_matrix += self.eta * np.dot(self.inp.T, backprop_error)
 		self.bias += self.eta * np.dot(np.ones((self.inp.shape[0], 1)).T, backprop_error)
 		self.gamma += dgamma
 		self.beta += dbeta

@@ -34,32 +34,32 @@ class ReLU():
 		return result
 
 class Layer():
-	def __init__(self, inpSize, numNodes, actFunc, eta, batch_size):
-		self.inpSize = inpSize
-		self.size = numNodes
-		self.weightMatrix = np.random.randn(inpSize, numNodes)
-		self.actFunc = actFunc
-		self.bias = np.random.randn(1, numNodes)
+	def __init__(self, inp_size, num_nodes, act_func, eta, batch_size):
+		self.inp_size = inp_size
+		self.size = num_nodes
+		self.weight_matrix = np.random.randn(inp_size, num_nodes)
+		self.act_func = act_func
+		self.bias = np.random.randn(1, num_nodes)
 		self.eta = eta
 		self.batch_size = batch_size
 		#caching the node input for the backward pass
-		self.inp = np.zeros((batch_size, inpSize))
-		self.out = np.zeros((batch_size, numNodes))
+		self.inp = np.zeros((batch_size, inp_size))
+		self.out = np.zeros((batch_size, num_nodes))
 
 	def forwardPass(self, inp):
 		self.inp = inp
-		net = np.dot(inp, self.weightMatrix) + self.bias
-		self.out = self.actFunc.transform(net)
+		net = np.dot(inp, self.weight_matrix) + self.bias
+		self.out = self.act_func.transform(net)
 		return self.out
 
 	def forwardPassTest(self, inp):
-		net = np.dot(inp, self.weightMatrix) + self.bias
-		return self.actFunc.transform(net)
+		net = np.dot(inp, self.weight_matrix) + self.bias
+		return self.act_func.transform(net)
 
 	def backwardPass(self, error):
-		backprop_error = error * self.actFunc.grad(self.out)
-		next_error = np.dot(backprop_error, self.weightMatrix.T)
-		self.weightMatrix += self.eta * np.dot(self.inp.T, backprop_error)
+		backprop_error = error * self.act_func.grad(self.out)
+		next_error = np.dot(backprop_error, self.weight_matrix.T)
+		self.weight_matrix += self.eta * np.dot(self.inp.T, backprop_error)
 		self.bias += self.eta * np.dot(np.ones((self.inp.shape[0], 1)).T, backprop_error)
 		return next_error
 

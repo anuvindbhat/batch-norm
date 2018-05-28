@@ -27,7 +27,7 @@ train_data, train_labels, test_data, test_labels = get_data_set()
 NNet = NN.NeuralNet(train_data.shape[1], [60, 60, train_labels.shape[1]], [NN.TanSigmoid(), NN.TanSigmoid(), NN.LogSigmoid()], 30)
 BNNet = BNN.NeuralNet(train_data.shape[1], [60, 60, train_labels.shape[1]], [BNN.TanSigmoid(), BNN.TanSigmoid(), BNN.LogSigmoid()], 30)
 
-total_epochs = 50
+total_epochs = 10
 epochsN, lossN, testN = NNet.batch_train(total_epochs, train_data, train_labels, test_data, test_labels)
 epochsB, lossB, testB = BNNet.batch_train(total_epochs, train_data, train_labels, test_data, test_labels)
 plt.plot(epochsN, lossN)
